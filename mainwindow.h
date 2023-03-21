@@ -2,8 +2,23 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <QLineEdit>
 #include <QMainWindow>
 #include <map>
+
+class MyLe : public QLineEdit {
+    QString suffix_ { "%1" };
+
+public:
+    MyLe(QWidget* parent = nullptr)
+        : QLineEdit { parent }
+    {
+        setReadOnly(true);
+    }
+    virtual ~MyLe() { }
+    void setSuffix(QString suffix) { suffix_ = "%1 " + suffix; }
+    void setValue(double val) { setText(suffix_.arg(val)); }
+};
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -11,22 +26,35 @@ class MainWindow;
 }
 QT_END_NAMESPACE
 
-class QDoubleSpinBox;
-
 class MainWindow : public QMainWindow {
     Q_OBJECT
 
+    MyLe* dsbx_val_S;
+    MyLe* dsbx_val_dencity;
+    MyLe* dsbx_val_dynamic_viscocity;
+    MyLe* dsbx_val_entalpy;
+    MyLe* dsbx_val_flow_speed;
+    MyLe* dsbx_val_kinematic_viscocity;
+    MyLe* dsbx_val_mass_flow;
+    MyLe* dsbx_val_value_flow;
+    MyLe* dsbx_val_value;
+    MyLe* dsbx_val_value_re;
+
+    /*
 
 
-    QDoubleSpinBox* dsbx_val_S;
-    QDoubleSpinBox* dsbx_val_dencity;
-    QDoubleSpinBox* dsbx_val_dynamic_viscocity;
-    QDoubleSpinBox* dsbx_val_entalpy;
-    QDoubleSpinBox* dsbx_val_flow_speed;
-    QDoubleSpinBox* dsbx_val_kinematic_viscocity;
-    QDoubleSpinBox* dsbx_val_mass_flow;
-    QDoubleSpinBox* dsbx_val_value_flow;
-    QDoubleSpinBox* dsbx_val_value;
+<widget class="QLabel" name="lbl_S_|||Площадь</string>
+<widget class="QLabel" name="lbl_dencity_|||Плотность среды</string>
+<widget class="QLabel" name="lbl_dynamic_viscocity_|||Динамическая вязкость среды</string>
+<widget class="QLabel" name="lbl_entalpy_|||Энтальпия среды</string>
+<widget class="QLabel" name="lbl_flow_speed_|||Скорость потока</string>
+<widget class="QLabel" name="lbl_kinematic_viscocity_|||Кинематическая вязкость среды</string>
+<widget class="QLabel" name="lbl_mass_flow_|||Массовый расход среды</string>
+<widget class="QLabel" name="lbl_name_Re_|||Число Рейнольдса</string>
+<widget class="QLabel" name="lbl_value_flow_|||Объёмный расход среды</string>
+<widget class="QLabel" name="lbl_value_|||Удельный объём среды</string>
+
+*/
 
 public:
     MainWindow(QWidget* parent = nullptr);
@@ -71,7 +99,6 @@ private:
     double val_S {};
     double val_entalpy {};
     double val_value {};
-    double val_value_flow {};
 
     double S();
 

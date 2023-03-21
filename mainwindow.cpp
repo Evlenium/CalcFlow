@@ -24,15 +24,35 @@ MainWindow::MainWindow(QWidget* parent)
 
     ui->setupUi(this);
 
-    ui->formLayout_2->addRow(new QLabel("Площадь", this), dsbx_val_S = new QDoubleSpinBox(this));
-    ui->formLayout_2->addRow(new QLabel("Плотность среды", this), dsbx_val_dencity = new QDoubleSpinBox(this));
-    ui->formLayout_2->addRow(new QLabel("Динамическая вязкость среды", this), dsbx_val_dynamic_viscocity = new QDoubleSpinBox(this));
-    ui->formLayout_2->addRow(new QLabel("Энтальпия среды", this), dsbx_val_entalpy = new QDoubleSpinBox(this));
-    ui->formLayout_2->addRow(new QLabel("Скорость потока", this), dsbx_val_flow_speed = new QDoubleSpinBox(this));
-    ui->formLayout_2->addRow(new QLabel("Кинематическая вязкость среды", this), dsbx_val_kinematic_viscocity = new QDoubleSpinBox(this));
-    ui->formLayout_2->addRow(new QLabel("Массовый расход среды", this), dsbx_val_mass_flow = new QDoubleSpinBox(this));
-    ui->formLayout_2->addRow(new QLabel("Объёмный расход среды", this), dsbx_val_value_flow = new QDoubleSpinBox(this));
-    ui->formLayout_2->addRow(new QLabel("Удельный объём среды", this), dsbx_val_value = new QDoubleSpinBox(this));
+    ui->formLayout_2->addRow(new QLabel("Площадь", this), dsbx_val_S = new MyLe(this));
+    ui->formLayout_2->addRow(new QLabel("Плотность среды", this), dsbx_val_dencity = new MyLe(this));
+    ui->formLayout_2->addRow(new QLabel("Динамическая вязкость среды", this), dsbx_val_dynamic_viscocity = new MyLe(this));
+    ui->formLayout_2->addRow(new QLabel("Энтальпия среды", this), dsbx_val_entalpy = new MyLe(this));
+    ui->formLayout_2->addRow(new QLabel("Скорость потока", this), dsbx_val_flow_speed = new MyLe(this));
+    ui->formLayout_2->addRow(new QLabel("Кинематическая вязкость среды", this), dsbx_val_kinematic_viscocity = new MyLe(this));
+    ui->formLayout_2->addRow(new QLabel("Массовый расход среды", this), dsbx_val_mass_flow = new MyLe(this));
+    ui->formLayout_2->addRow(new QLabel("Объёмный расход среды", this), dsbx_val_value_flow = new MyLe(this));
+    ui->formLayout_2->addRow(new QLabel("Удельный объём среды", this), dsbx_val_value = new MyLe(this));
+    ui->formLayout_2->addRow(new QLabel("Число Рейнольдса", this), dsbx_val_value_re = new MyLe(this));
+    ui->formLayout_2->setLabelAlignment(Qt::AlignRight);
+    // ² ³
+    dsbx_val_S->setSuffix(" м²");
+    dsbx_val_dencity->setSuffix(" кг/м³");
+    dsbx_val_dynamic_viscocity->setSuffix(" ");
+    dsbx_val_entalpy->setSuffix(" ");
+    dsbx_val_flow_speed->setSuffix(" м/с");
+    dsbx_val_kinematic_viscocity->setSuffix(" ");
+    dsbx_val_mass_flow->setSuffix(" м³/ч*кг/м³");
+    dsbx_val_value_flow->setSuffix(" м³/ч");
+    dsbx_val_value->setSuffix(" м³");
+    dsbx_val_value_re->setSuffix(" ");
+
+    //    for (auto* dsbx : ui->widget_2->findChildren<QDoubleSpinBox*>()) {
+    //        dsbx->setRange(-std::numeric_limits<double>::max(), +std::numeric_limits<double>::max());
+    //        dsbx->setReadOnly(true);
+    //        dsbx->setButtonSymbols(QDoubleSpinBox::NoButtons);
+    //        dsbx->setDecimals(6);
+    //    }
 
     // tuple
     using key = std::tuple<int, int>;
@@ -199,14 +219,11 @@ void MainWindow::calc()
     //        Площадь трубы м2	S	0,001963495
     //        Re=(Q/3600*Dг)/(ν*S)
 
-    //   dsbx_val_Re->setValue(Re());
+    //   dsbx_val_value_re->setValue(Re());
     //   dsbx_val_value->setValue(1 / density_t());
     //   dsbx_val_mass_flow->setValue(density_t() * flow());
     if (map.contains(ui->cbx_paramCalc->currentText()))
         *map[ui->cbx_paramCalc->currentText()] = ui->dsbx_OfParamCalcDouble->value();
-    else {
-        qWarning() << ui->cbx_paramCalc->currentText();
-    }
 
     static const std::map<QStringView, void (*)(MainWindow*), std::less<>> map {
         { L"Массовый расход", [](MainWindow* w) {
@@ -235,17 +252,16 @@ void MainWindow::calc()
         map.at(ui->cbx_paramCalc->currentText())(this);
 
     S();
-
     Re();
 
-    dsbx_val_density->setValue(density_t());
+    dsbx_val_dencity->setValue(density_t());
     dsbx_val_dynamic_viscocity->setValue(dynamic_viscosity_t());
     dsbx_val_kinematic_viscocity->setValue(kinematic_viscosity_t());
 
-    dsbx_val_Re->setValue(val_Re);
+    dsbx_val_value_re->setValue(val_Re);
     dsbx_val_S->setValue(val_S);
-    dsbx_val_Value_FLow->setValue(val_value_flow);
-    dsbx_val_enthalpy->setValue(val_entalpy);
+    dsbx_val_value_flow->setValue(val_volume_flow);
+    dsbx_val_entalpy->setValue(val_entalpy);
     dsbx_val_flow_speed->setValue(val_flow_speed);
     dsbx_val_mass_flow->setValue(val_mass_flow);
     dsbx_val_value->setValue(val_value);
@@ -316,7 +332,7 @@ double MainWindow::calc_mass_flow() { return val_mass_flow = density_t() * val_v
 
 double MainWindow::calc_heat_power() { return val_heat_power = flow_t(); }
 
-double MainWindow::calc_volume_flow() { return val_value_flow = val_flow_speed * S() * 3600; }
+double MainWindow::calc_volume_flow() { return val_volume_flow = val_flow_speed * S() * 3600; }
 
 double MainWindow::kinematic_viscosity_t() { return ui->cbx_temperature->currentData(Qt::UserRole + 1).toDouble(); }
 
