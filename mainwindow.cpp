@@ -181,11 +181,12 @@ MainWindow::MainWindow(QWidget* parent)
             ui->dsbx_OfParamCalcDouble->setValue(*map[ui->cbx_paramCalc->currentText()]);
     });
 
-    connect(ui->cbx_Dn, &QComboBox::currentIndexChanged, this, &MainWindow::calc);
+    connect(ui->cbx_Dn, &QComboBox::currentIndexChanged, this, &MainWindow::val_Dn_t);
+
     connect(ui->cbx_MeasuredMedium, &QComboBox::currentIndexChanged, this, &MainWindow::calc);
     connect(ui->cbx_TypeFlowmeter, &QComboBox::currentIndexChanged, this, &MainWindow::calc);
     // connect(ui->cbx_measGas, &QComboBox::currentIndexChanged, this, &MainWindow::calc);
-    connect(ui->cbx_paramCalc, &QComboBox::currentIndexChanged, this, &MainWindow::calc);
+    //    connect(ui->cbx_paramCalc, &QComboBox::currentIndexChanged, this, &MainWindow::calc);
     connect(ui->cbx_temperature, &QComboBox::currentIndexChanged, this, &MainWindow::calc);
     connect(ui->cbx_typeOfPressure, &QComboBox::currentIndexChanged, this, &MainWindow::calc);
     connect(ui->cbx_viscocityType, &QComboBox::currentIndexChanged, this, &MainWindow::calc);
@@ -237,8 +238,8 @@ void MainWindow::calc()
              w->calc_mass_flow();
          } },
         { L"Скорость потока", [](MainWindow* w) {
-             w->calc_flow_speed();
              w->calc_mass_flow();
+             w->calc_heat_power();
              w->calc_volume_flow();
          } },
         { L"Тепловая мощность", [](MainWindow* w) {
@@ -326,13 +327,13 @@ void MainWindow::save()
     settings.endGroup();
 }
 
-double MainWindow::calc_flow_speed() { return val_flow_speed = val_volume_flow / S() / 3600; }
+double MainWindow::calc_flow_speed() { return val_flow_speed = val_volume_flow / val_S / 3600; }
 
 double MainWindow::calc_mass_flow() { return val_mass_flow = density_t() * val_volume_flow; }
 
 double MainWindow::calc_heat_power() { return val_heat_power = flow_t(); }
 
-double MainWindow::calc_volume_flow() { return val_volume_flow = val_flow_speed * S() * 3600; }
+double MainWindow::calc_volume_flow() { return val_volume_flow = val_flow_speed * val_S * 3600; }
 
 double MainWindow::kinematic_viscosity_t() { return ui->cbx_temperature->currentData(Qt::UserRole + 1).toDouble(); }
 
@@ -344,14 +345,16 @@ double MainWindow::val_Dn_t()
 {
     static QRegularExpression re(R"((.+\s)?(\d+))");
     bool ok {};
-    return re.match(ui->cbx_Dn->currentText()).captured(2).toDouble(&ok);
+    val_Dn = re.match(ui->cbx_Dn->currentText()).captured(2).toDouble(&ok);
+    S();
+    return val_Dn;
 }
 
 double MainWindow::flow_t() { return (map.contains(ui->cbx_paramCalc->currentText())) ? *map[ui->cbx_paramCalc->currentText()] : 0.0; }
 
-double MainWindow::Re() { return val_Re = ((flow_t() / 3600) * (val_Dn_t() / 1000)) / (S() * kinematic_viscosity_t()); }
+double MainWindow::Re() { return val_Re = ((flow_t() / 3600) * (val_Dn / 1000)) / (val_S * kinematic_viscosity_t()); }
 
-double MainWindow::S() { return val_S = acos(-1.0) * pow(val_Dn_t() / 1000, 2) / 4; }
+double MainWindow::S() { return val_S = acos(-1.0) * pow(val_Dn / 1000, 2) / 4; }
 
 void MainWindow::testj()
 {

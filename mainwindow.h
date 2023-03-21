@@ -99,6 +99,7 @@ private:
     double val_S {};
     double val_entalpy {};
     double val_value {};
+    double val_Dn {};
 
     double S();
 
