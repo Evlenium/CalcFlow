@@ -24,6 +24,16 @@ MainWindow::MainWindow(QWidget* parent)
 
     ui->setupUi(this);
 
+    ui->formLayout_2->addRow(new QLabel("Площадь", this), dsbx_val_S = new QDoubleSpinBox(this));
+    ui->formLayout_2->addRow(new QLabel("Плотность среды", this), dsbx_val_dencity = new QDoubleSpinBox(this));
+    ui->formLayout_2->addRow(new QLabel("Динамическая вязкость среды", this), dsbx_val_dynamic_viscocity = new QDoubleSpinBox(this));
+    ui->formLayout_2->addRow(new QLabel("Энтальпия среды", this), dsbx_val_entalpy = new QDoubleSpinBox(this));
+    ui->formLayout_2->addRow(new QLabel("Скорость потока", this), dsbx_val_flow_speed = new QDoubleSpinBox(this));
+    ui->formLayout_2->addRow(new QLabel("Кинематическая вязкость среды", this), dsbx_val_kinematic_viscocity = new QDoubleSpinBox(this));
+    ui->formLayout_2->addRow(new QLabel("Массовый расход среды", this), dsbx_val_mass_flow = new QDoubleSpinBox(this));
+    ui->formLayout_2->addRow(new QLabel("Объёмный расход среды", this), dsbx_val_value_flow = new QDoubleSpinBox(this));
+    ui->formLayout_2->addRow(new QLabel("Удельный объём среды", this), dsbx_val_value = new QDoubleSpinBox(this));
+
     // tuple
     using key = std::tuple<int, int>;
     using val = std::tuple<
@@ -146,6 +156,11 @@ MainWindow::MainWindow(QWidget* parent)
     //  qDebug()<<S;
     //  qDebug() << __FUNCTION__ << ui->cbx_Dn->currentData().toDouble();
 
+    connect(ui->cbx_paramCalc, &QComboBox::currentIndexChanged, [this] {
+        if (map.contains(ui->cbx_paramCalc->currentText()))
+            ui->dsbx_OfParamCalcDouble->setValue(*map[ui->cbx_paramCalc->currentText()]);
+    });
+
     connect(ui->cbx_Dn, &QComboBox::currentIndexChanged, this, &MainWindow::calc);
     connect(ui->cbx_MeasuredMedium, &QComboBox::currentIndexChanged, this, &MainWindow::calc);
     connect(ui->cbx_TypeFlowmeter, &QComboBox::currentIndexChanged, this, &MainWindow::calc);
@@ -176,7 +191,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::calc()
 {
-    ui->lbl_S->setNum(S());
+    dsbx_val_S->setValue(S());
 
     //        Гидравлический диаметр м	Dг	0,05
     //        Динамическая вязкость Па*с	µ	0,0000181
@@ -184,14 +199,58 @@ void MainWindow::calc()
     //        Площадь трубы м2	S	0,001963495
     //        Re=(Q/3600*Dг)/(ν*S)
 
-    ui->lbl_Re->setNum(Re());
-    ui->lbl_kinematic_viscocity->setNum(kinematic_viscosity());
-    ui->lbl_dynamic_viscocity->setNum(dynamic_viscosity());
-    ui->lbl_density->setNum(density());
-    ui->lbl_value->setNum(1 / density());
-    ui->lbl_mass_flow->setNum(density() * flow());
+    //   dsbx_val_Re->setValue(Re());
+    //   dsbx_val_value->setValue(1 / density_t());
+    //   dsbx_val_mass_flow->setValue(density_t() * flow());
+    if (map.contains(ui->cbx_paramCalc->currentText()))
+        *map[ui->cbx_paramCalc->currentText()] = ui->dsbx_OfParamCalcDouble->value();
+    else {
+        qWarning() << ui->cbx_paramCalc->currentText();
+    }
 
-    ui->dsbx_OfParamCalcDouble->setValue((this->*map[ui->cbx_paramCalc->currentText()])());
+    static const std::map<QStringView, void (*)(MainWindow*), std::less<>> map {
+        { L"Массовый расход", [](MainWindow* w) {
+             w->calc_flow_speed();
+             w->calc_heat_power();
+             w->calc_volume_flow();
+         } },
+        { L"Объёмный расход", [](MainWindow* w) {
+             w->calc_flow_speed();
+             w->calc_heat_power();
+             w->calc_mass_flow();
+         } },
+        { L"Скорость потока", [](MainWindow* w) {
+             w->calc_flow_speed();
+             w->calc_mass_flow();
+             w->calc_volume_flow();
+         } },
+        { L"Тепловая мощность", [](MainWindow* w) {
+             w->calc_flow_speed();
+             w->calc_mass_flow();
+             w->calc_volume_flow();
+         } },
+    };
+
+    if (map.contains(ui->cbx_paramCalc->currentText()))
+        map.at(ui->cbx_paramCalc->currentText())(this);
+
+    S();
+
+    Re();
+
+    dsbx_val_density->setValue(density_t());
+    dsbx_val_dynamic_viscocity->setValue(dynamic_viscosity_t());
+    dsbx_val_kinematic_viscocity->setValue(kinematic_viscosity_t());
+
+    dsbx_val_Re->setValue(val_Re);
+    dsbx_val_S->setValue(val_S);
+    dsbx_val_Value_FLow->setValue(val_value_flow);
+    dsbx_val_enthalpy->setValue(val_entalpy);
+    dsbx_val_flow_speed->setValue(val_flow_speed);
+    dsbx_val_mass_flow->setValue(val_mass_flow);
+    dsbx_val_value->setValue(val_value);
+
+    //    ui->dsbx_OfParamCalcDouble->setValue((this->*map[ui->cbx_paramCalc->currentText()])());
 }
 
 void MainWindow::loadJson(const QString& str_cbx)
@@ -251,37 +310,32 @@ void MainWindow::save()
     settings.endGroup();
 }
 
-double MainWindow::calc_speed()
-{
-    double tmpSpeed = flow() / S() / 3600;
-    ui->lbl_flow_speed->setNum(tmpSpeed);
-    return tmpSpeed;
-}
+double MainWindow::calc_flow_speed() { return val_flow_speed = val_volume_flow / S() / 3600; }
 
-double MainWindow::calc_mass_flow() { return density() * flow(); }
+double MainWindow::calc_mass_flow() { return val_mass_flow = density_t() * val_volume_flow; }
 
-double MainWindow::calc_heat_power() { return flow(); }
+double MainWindow::calc_heat_power() { return val_heat_power = flow_t(); }
 
-double MainWindow::calc_volume_flow() { return flow(); }
+double MainWindow::calc_volume_flow() { return val_value_flow = val_flow_speed * S() * 3600; }
 
-double MainWindow::kinematic_viscosity() { return ui->cbx_temperature->currentData(Qt::UserRole + 1).toDouble(); }
+double MainWindow::kinematic_viscosity_t() { return ui->cbx_temperature->currentData(Qt::UserRole + 1).toDouble(); }
 
-double MainWindow::dynamic_viscosity() { return ui->cbx_temperature->currentData(Qt::UserRole + 0).toDouble(); }
+double MainWindow::dynamic_viscosity_t() { return ui->cbx_temperature->currentData(Qt::UserRole + 0).toDouble(); }
 
-double MainWindow::density() { return ui->cbx_temperature->currentData(Qt::UserRole + 2).toDouble(); }
+double MainWindow::density_t() { return ui->cbx_temperature->currentData(Qt::UserRole + 2).toDouble(); }
 
-double MainWindow::flow() { return ui->dsbx_OfParamCalcDouble->value(); }
-
-double MainWindow::Re() { return ((flow() / 3600) * (val_Dn() / 1000)) / (S() * kinematic_viscosity()); }
-
-double MainWindow::val_Dn()
+double MainWindow::val_Dn_t()
 {
     static QRegularExpression re(R"((.+\s)?(\d+))");
     bool ok {};
     return re.match(ui->cbx_Dn->currentText()).captured(2).toDouble(&ok);
 }
 
-double MainWindow::S() { return acos(-1.0) * pow(val_Dn() / 1000, 2) / 4; }
+double MainWindow::flow_t() { return (map.contains(ui->cbx_paramCalc->currentText())) ? *map[ui->cbx_paramCalc->currentText()] : 0.0; }
+
+double MainWindow::Re() { return val_Re = ((flow_t() / 3600) * (val_Dn_t() / 1000)) / (S() * kinematic_viscosity_t()); }
+
+double MainWindow::S() { return val_S = acos(-1.0) * pow(val_Dn_t() / 1000, 2) / 4; }
 
 void MainWindow::testj()
 {

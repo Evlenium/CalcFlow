@@ -246,12 +246,21 @@
       </layout>
      </widget>
     </item>
+    <item row="5" column="0" colspan="2">
+     <widget class="QTableView" name="tableView"/>
+    </item>
     <item row="4" column="0" colspan="2">
      <widget class="QWidget" name="widget_2" native="true">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
       <property name="layoutDirection">
        <enum>Qt::LeftToRight</enum>
       </property>
-      <layout class="QGridLayout" name="gridLayout_3" columnstretch="0,0">
+      <layout class="QFormLayout" name="formLayout_2">
        <property name="leftMargin">
         <number>0</number>
        </property>
@@ -264,151 +273,8 @@
        <property name="bottomMargin">
         <number>0</number>
        </property>
-       <item row="4" column="0">
-        <widget class="QLabel" name="lbl_dencity_name">
-         <property name="text">
-          <string>Плотность среды</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0">
-        <widget class="QLabel" name="lbl_flow_speed_name">
-         <property name="text">
-          <string>Скорость потока</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="1">
-        <widget class="QLabel" name="lbl_S">
-         <property name="text">
-          <string/>
-         </property>
-        </widget>
-       </item>
-       <item row="5" column="0">
-        <widget class="QLabel" name="lbl_entalpy_name">
-         <property name="text">
-          <string>Энтальпия среды</string>
-         </property>
-        </widget>
-       </item>
-       <item row="6" column="0">
-        <widget class="QLabel" name="lbl_dynamic_viscocity_name">
-         <property name="text">
-          <string>Динамическая вязкость среды</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="0">
-        <widget class="QLabel" name="lbl_value_flow_name">
-         <property name="text">
-          <string>Объёмный расход среды</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="0">
-        <widget class="QLabel" name="lbl_name_Re">
-         <property name="text">
-          <string>Число Рейнольдса</string>
-         </property>
-        </widget>
-       </item>
-       <item row="8" column="0">
-        <widget class="QLabel" name="lbl_value_name">
-         <property name="text">
-          <string>Удельный объём среды</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="1">
-        <widget class="QLabel" name="lbl_flow_speed">
-         <property name="text">
-          <string/>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="0">
-        <widget class="QLabel" name="lbl_S_name">
-         <property name="text">
-          <string>Площадь</string>
-         </property>
-        </widget>
-       </item>
-       <item row="7" column="0">
-        <widget class="QLabel" name="lbl_mass_flow_name">
-         <property name="text">
-          <string>Массовый расход среды</string>
-         </property>
-        </widget>
-       </item>
-       <item row="9" column="0">
-        <widget class="QLabel" name="lbl_kinematic_viscocity_name">
-         <property name="text">
-          <string>Кинематическая вязкость среды</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="1">
-        <widget class="QLabel" name="lbl_Re">
-         <property name="text">
-          <string/>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="1">
-        <widget class="QLabel" name="lbl_Value_FLow">
-         <property name="text">
-          <string/>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="1">
-        <widget class="QLabel" name="lbl_density">
-         <property name="text">
-          <string/>
-         </property>
-        </widget>
-       </item>
-       <item row="5" column="1">
-        <widget class="QLabel" name="lbl_enthalpy">
-         <property name="text">
-          <string/>
-         </property>
-        </widget>
-       </item>
-       <item row="6" column="1">
-        <widget class="QLabel" name="lbl_dynamic_viscocity">
-         <property name="text">
-          <string/>
-         </property>
-        </widget>
-       </item>
-       <item row="7" column="1">
-        <widget class="QLabel" name="lbl_mass_flow">
-         <property name="text">
-          <string/>
-         </property>
-        </widget>
-       </item>
-       <item row="8" column="1">
-        <widget class="QLabel" name="lbl_value">
-         <property name="text">
-          <string/>
-         </property>
-        </widget>
-       </item>
-       <item row="9" column="1">
-        <widget class="QLabel" name="lbl_kinematic_viscocity">
-         <property name="text">
-          <string/>
-         </property>
-        </widget>
-       </item>
       </layout>
      </widget>
-    </item>
-    <item row="5" column="0" colspan="2">
-     <widget class="QTableView" name="tableView"/>
     </item>
    </layout>
   </widget>
