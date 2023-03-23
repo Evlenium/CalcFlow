@@ -138,7 +138,7 @@
       <property name="layoutDirection">
        <enum>Qt::LeftToRight</enum>
       </property>
-      <layout class="QGridLayout" name="gridLayout" columnstretch="0,1">
+      <layout class="QGridLayout" name="gridLayout" columnstretch="0,1,0">
        <property name="leftMargin">
         <number>0</number>
        </property>
@@ -151,71 +151,13 @@
        <property name="bottomMargin">
         <number>0</number>
        </property>
-       <item row="0" column="0">
-        <widget class="QLabel" name="lbl_measGas">
-         <property name="text">
-          <string>Измеряемый газ</string>
-         </property>
-        </widget>
-       </item>
-       <item row="5" column="1">
-        <widget class="QDoubleSpinBox" name="dsbx_viscocity">
-         <property name="maximum">
-          <double>100.000000000000000</double>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="1">
-        <widget class="QComboBox" name="cbx_measGas"/>
-       </item>
-       <item row="2" column="0">
-        <widget class="QLabel" name="lbl_pressure">
-         <property name="text">
-          <string>Значение давления среды</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="1">
-        <widget class="QComboBox" name="cbx_temperature"/>
-       </item>
-       <item row="6" column="0">
-        <widget class="QLabel" name="lbl_paramCalc">
-         <property name="text">
-          <string>Параметр расчёта</string>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="1">
-        <widget class="QComboBox" name="cbx_viscocityType"/>
-       </item>
        <item row="1" column="1">
         <widget class="QComboBox" name="cbx_typeOfPressure"/>
        </item>
-       <item row="5" column="0">
-        <widget class="QLabel" name="lbl_viscocity">
+       <item row="3" column="0">
+        <widget class="QLabel" name="lbl_temperature">
          <property name="text">
-          <string>Значение вязкости среды</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="1">
-        <widget class="QDoubleSpinBox" name="dsbx_pressure">
-         <property name="maximum">
-          <double>100.000000000000000</double>
-         </property>
-        </widget>
-       </item>
-       <item row="7" column="0">
-        <widget class="QLabel" name="lbl_valueOfParamCalc">
-         <property name="text">
-          <string>Значение параметра расчёта</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0">
-        <widget class="QLabel" name="lbl_typeOfPressure">
-         <property name="text">
-          <string>Вид давления среды</string>
+          <string>Значение темературы среды</string>
          </property>
         </widget>
        </item>
@@ -229,6 +171,64 @@
        <item row="6" column="1">
         <widget class="QComboBox" name="cbx_paramCalc"/>
        </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="lbl_typeOfPressure">
+         <property name="text">
+          <string>Вид давления среды</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QDoubleSpinBox" name="dsbx_pressure">
+         <property name="maximum">
+          <double>100.000000000000000</double>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QComboBox" name="cbx_measGas"/>
+       </item>
+       <item row="5" column="0">
+        <widget class="QLabel" name="lbl_viscocity">
+         <property name="text">
+          <string>Значение вязкости среды</string>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="1">
+        <widget class="QDoubleSpinBox" name="dsbx_viscocity">
+         <property name="maximum">
+          <double>100.000000000000000</double>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="1">
+        <widget class="QComboBox" name="cbx_viscocityType"/>
+       </item>
+       <item row="6" column="0">
+        <widget class="QLabel" name="lbl_paramCalc">
+         <property name="text">
+          <string>Параметр расчёта</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="lbl_pressure">
+         <property name="text">
+          <string>Значение давления среды</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="QComboBox" name="cbx_temperature"/>
+       </item>
+       <item row="0" column="0">
+        <widget class="QLabel" name="lbl_measGas">
+         <property name="text">
+          <string>Измеряемый газ</string>
+         </property>
+        </widget>
+       </item>
        <item row="7" column="1">
         <widget class="QDoubleSpinBox" name="dsbx_OfParamCalcDouble">
          <property name="maximum">
@@ -236,12 +236,15 @@
          </property>
         </widget>
        </item>
-       <item row="3" column="0">
-        <widget class="QLabel" name="lbl_temperature">
+       <item row="7" column="0">
+        <widget class="QLabel" name="lbl_valueOfParamCalc">
          <property name="text">
-          <string>Значение темературы среды</string>
+          <string>Значение параметра расчёта</string>
          </property>
         </widget>
+       </item>
+       <item row="7" column="2">
+        <widget class="QComboBox" name="comboBox"/>
        </item>
       </layout>
      </widget>

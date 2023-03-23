@@ -2,6 +2,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "calc.h"
 #include <QLineEdit>
 #include <QMainWindow>
 #include <map>
@@ -29,32 +30,16 @@ QT_END_NAMESPACE
 class MainWindow : public QMainWindow {
     Q_OBJECT
 
-    MyLe* dsbx_val_S;
-    MyLe* dsbx_val_dencity;
-    MyLe* dsbx_val_dynamic_viscocity;
-    MyLe* dsbx_val_entalpy;
-    MyLe* dsbx_val_flow_speed;
-    MyLe* dsbx_val_kinematic_viscocity;
-    MyLe* dsbx_val_mass_flow;
-    MyLe* dsbx_val_value_flow;
-    MyLe* dsbx_val_value;
-    MyLe* dsbx_val_value_re;
-
-    /*
-
-
-<widget class="QLabel" name="lbl_S_|||Площадь</string>
-<widget class="QLabel" name="lbl_dencity_|||Плотность среды</string>
-<widget class="QLabel" name="lbl_dynamic_viscocity_|||Динамическая вязкость среды</string>
-<widget class="QLabel" name="lbl_entalpy_|||Энтальпия среды</string>
-<widget class="QLabel" name="lbl_flow_speed_|||Скорость потока</string>
-<widget class="QLabel" name="lbl_kinematic_viscocity_|||Кинематическая вязкость среды</string>
-<widget class="QLabel" name="lbl_mass_flow_|||Массовый расход среды</string>
-<widget class="QLabel" name="lbl_name_Re_|||Число Рейнольдса</string>
-<widget class="QLabel" name="lbl_value_flow_|||Объёмный расход среды</string>
-<widget class="QLabel" name="lbl_value_|||Удельный объём среды</string>
-
-*/
+    MyLe* dsbx_S_;
+    MyLe* dsbx_dencity_;
+    MyLe* dsbx_dynamic_viscocity_;
+    MyLe* dsbx_entalpy_;
+    MyLe* dsbx_flow_speed_;
+    MyLe* dsbx_kinematic_viscocity_;
+    MyLe* dsbx_mass_flow_;
+    MyLe* dsbx_value_flow_;
+    MyLe* dsbx_value_;
+    MyLe* dsbx_value_re_;
 
 public:
     MainWindow(QWidget* parent = nullptr);
@@ -62,57 +47,67 @@ public:
 
 private:
     Ui::MainWindow* ui;
-    // double S;
 
-    void calc();
     void loadJson(const QString& str_cbx);
 
     void load();
     void save();
 
-    double calc_flow_speed();
-    double calc_heat_power();
-    double calc_mass_flow();
-    double calc_volume_flow();
+    Calc calc;
 
-    /////////////////////
+    // double S;
 
-    double kinematic_viscosity_t();
-    double dynamic_viscosity_t();
-    double density_t();
+    //    double calc_flow_speed();
+    //    double calc_heat_power();
+    //    double calc_mass_flow();
+    //    double calc_volume_flow();
+    //    double calc_volume_flow__();
 
-    double val_Dn_t();
+    //    /////////////////////
 
-    double flow_t();
-    double Re();
+    //    double kinematic_viscosity_t();
+    //    double dynamic_viscosity_t();
+    //    double density_t();
+    //    double specific_volume();
 
-    //    double val_dencity {};
-    //    double val_dynamic_viscocity {};
-    //    double val_kinematic_viscocity {};
+    //    double Dn_t_();
 
-    double val_flow_speed {};
-    double val_heat_power {};
-    double val_mass_flow {};
-    double val_volume_flow {};
+    //    double flow_t();
+    //    double Re();
 
-    double val_Re;
-    double val_S {};
-    double val_entalpy {};
-    double val_value {};
-    double val_Dn {};
+    //    //    double dencity_ {};
+    //    //    double dynamic_viscocity_ {};
+    //    //    double kinematic_viscocity_ {};
 
-    double S();
+    //    double flow_speed_ {};
+    //    double heat_power_ {};
+    //    double mass_flow_ {};
+    //    double volume_flow_ {};
 
-    void testj();
+    //    double Re_;
+    //    double S_ {};
+    //    double entalpy_ {};
+    //    double value_ {};
+    //    double Dn_ {};
 
-    using CalcFunc = decltype(&MainWindow::calc_volume_flow);
+    //    double S();
 
-    std::map<QStringView, double*, std::less<>> map {
-        { L"Массовый расход", &val_mass_flow },
-        { L"Объёмный расход", &val_volume_flow },
-        { L"Скорость потока", &val_flow_speed },
-        { L"Тепловая мощность", &val_heat_power },
-    };
+    //    void testj();
+
+    //    using CalcFunc = decltype(&MainWindow::calc_volume_flow);
+
+    //    std::map<QStringView, double*, std::less<>> map {
+    //        { L"Массовый расход", &mass_flow_ },
+    //        { L"Объёмный расход", &volume_flow_ },
+    //        { L"Скорость потока", &flow_speed_ },
+    //        { L"Тепловая мощность", &heat_power_ },
+    //    };
+    //    std::map<QStringView, QString, std::less<>> map_suff {
+    //        { L"Массовый расход", " м³/ч*кг/м³" },
+    //        { L"Объёмный расход", " м³/ч" },
+    //        { L"Скорость потока", " м/с" },
+    //        { L"Тепловая мощность", " Вт" },
+    //    };
 };
 
 #endif // MAINWINDOW_H
